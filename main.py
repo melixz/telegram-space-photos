@@ -2,19 +2,19 @@ import os
 import requests
 
 
-url = 'https://upload.wikimedia.org/wikipedia/commons/3/3f/HST-SM4.jpeg'
+def download_image(url, save_path):
+    os.makedirs(os.path.dirname(save_path), exist_ok=True)
+
+    response = requests.get(url)
+    response.raise_for_status()
+
+    with open(save_path, 'wb') as file:
+        file.write(response.content)
+
+    print(f"Изображение сохранено как {save_path}")
 
 
-os.makedirs('images', exist_ok=True)
+image_url = 'https://upload.wikimedia.org/wikipedia/commons/3/3f/HST-SM4.jpeg'
+save_path = 'images/hubble.jpeg'
 
-
-file_path = os.path.join('images', 'hubble.jpeg')
-
-
-response = requests.get(url)
-
-
-with open(file_path, 'wb') as file:
-    file.write(response.content)
-
-print(f"Изображение сохранено как {file_path}")
+download_image(image_url, save_path)
