@@ -1,5 +1,6 @@
 import os
 import requests
+from dotenv import load_dotenv
 
 
 def download_image(url, save_path):
@@ -44,16 +45,33 @@ def save_spacex_photos_to_folder(api_url, flight_id):
         download_image(url, save_path)
 
 
-image_url = 'https://upload.wikimedia.org/wikipedia/commons/3/3f/HST-SM4.jpeg'
-save_path = 'images/hubble.jpeg'
-download_image(image_url, save_path)
+def fetch_spacex_last_launch():
+    api_url_latest = 'https://api.spacexdata.com/v5/launches/latest'
+    spacex_save_path_latest = 'images/spacex_latest.jpeg'
+    spacex_api_latest(api_url_latest, spacex_save_path_latest)
 
 
-api_url_latest = 'https://api.spacexdata.com/v5/launches/latest'
-spacex_save_path_latest = 'images/spacex_latest.jpeg'
-spacex_api_latest(api_url_latest, spacex_save_path_latest)
+def download_nasa_apod_image(api_key):
+    apod_url = "https://api.nasa.gov/planetary/apod"
+    params = {'api_key': api_key, 'hd': True}
+    response = requests.get(apod_url, params=params)
+    response.raise_for_status()
+    apod_data = response.json()
+    image_url = apod_data.get('url')
+    if not image_url:
+        print("URL изображения не найден.")
+        return
+    save_path = os.path.join('images', 'nasa_apod_today.jpg')
+    os.makedirs(os.path.dirname(save_path), exist_ok=True)
+    response_img = requests.get(image_url)
+    response_img.raise_for_status()
+    with open(save_path, 'wb') as file:
+        file.write(response_img.content)
+    print(f"Изображение сохранено как {save_path}")
 
 
-api_url_by_id = 'https://api.spacexdata.com/v5/launches'
-flight_id = '5eb87d47ffd86e000604b38a'
-save_spacex_photos_to_folder(api_url_by_id, flight_id)
+load_dotenv()
+api_key = os.environ.get('NASA_API_KEY')
+download_nasa_apod_image(api_key)
+
+fetch_spacex_last_launch()
