@@ -1,6 +1,7 @@
 import os
 import requests
 from dotenv import load_dotenv
+from urllib.parse import urlsplit, unquote
 
 
 def download_image(url, save_path):
@@ -51,6 +52,13 @@ def fetch_spacex_last_launch():
     spacex_api_latest(api_url_latest, spacex_save_path_latest)
 
 
+def get_file_extension_from_url(url):
+    path = urlsplit(url).path
+    filename = os.path.basename(unquote(path))
+    _, extension = os.path.splitext(filename)
+    return extension
+
+
 def download_nasa_apod_image(api_key):
     apod_url = "https://api.nasa.gov/planetary/apod"
     params = {'api_key': api_key, 'hd': True}
@@ -61,7 +69,9 @@ def download_nasa_apod_image(api_key):
     if not image_url:
         print("URL изображения не найден.")
         return
-    save_path = os.path.join('images', 'nasa_apod_today.jpg')
+
+    file_extension = get_file_extension_from_url(image_url)
+    save_path = os.path.join('images', f'nasa_apod_today{file_extension}')
     os.makedirs(os.path.dirname(save_path), exist_ok=True)
     response_img = requests.get(image_url)
     response_img.raise_for_status()
@@ -74,4 +84,8 @@ load_dotenv()
 api_key = os.environ.get('NASA_API_KEY')
 download_nasa_apod_image(api_key)
 
+
 fetch_spacex_last_launch()
+
+test_url = "https://example.com/txt/hello%20world.txt?v=9#python"
+print(get_file_extension_from_url(test_url))
