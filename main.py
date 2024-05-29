@@ -87,7 +87,7 @@ def download_nasa_apod_images(api_key, count=50):
         print(f"Изображение сохранено как {save_path}")
 
 
-def get_epic_image_url(api_key):
+def get_epic_image_urls(api_key, count=10):
     base_url = "https://api.nasa.gov/EPIC/api/natural"
     params = {'api_key': api_key}
 
@@ -100,26 +100,35 @@ def get_epic_image_url(api_key):
 
     if not data:
         print("Нет данных от EPIC.")
-        return None
+        return []
 
-    latest_image = data[0]
-    image_date = latest_image['date'].split()[0]
-    image_name = latest_image['image']
+    image_urls = []
+    for item in data[:count]:
+        image_date = item['date'].split()[0]
+        image_name = item['image']
+        image_url = f"https://epic.gsfc.nasa.gov/archive/natural/{image_date.replace('-', '/')}/png/{image_name}.png"
+        image_urls.append(image_url)
 
-    image_url = f"https://epic.gsfc.nasa.gov/archive/natural/{image_date.replace('-', '/')}/png/{image_name}.png"
+    return image_urls
 
-    return image_url
+
+def download_epic_images(api_key, count=10):
+    image_urls = get_epic_image_urls(api_key, count)
+    if not image_urls:
+        print("Фотографии не найдены.")
+        return
+
+    os.makedirs('epic_images', exist_ok=True)
+
+    for index, url in enumerate(image_urls):
+        save_path = os.path.join('images', f'epic_image_{index}.png')
+        download_image(url, save_path)
 
 
 load_dotenv()
 api_key = os.environ.get('NASA_API_KEY')
 download_nasa_apod_images(api_key, count=50)
-image_url = get_epic_image_url(api_key)
-if image_url:
-    print(f"Ссылка на изображение: {image_url}")
-else:
-    print("Изображение не найдено.")
-
+download_epic_images(api_key, count=10)
 
 test_url = "https://example.com/txt/hello%20world.txt?v=9#python"
 print(get_file_extension_from_url(test_url))
