@@ -63,7 +63,6 @@ def download_nasa_apod_images(api_key, count=50):
     apod_url = "https://api.nasa.gov/planetary/apod"
     params = {'api_key': api_key, 'count': count}
 
-    # Кодируем параметры
     encoded_params = urlencode(params)
     full_url = f"{apod_url}?{encoded_params}"
 
@@ -88,9 +87,39 @@ def download_nasa_apod_images(api_key, count=50):
         print(f"Изображение сохранено как {save_path}")
 
 
+def get_epic_image_url(api_key):
+    base_url = "https://api.nasa.gov/EPIC/api/natural"
+    params = {'api_key': api_key}
+
+    encoded_params = urlencode(params)
+    full_url = f"{base_url}?{encoded_params}"
+
+    response = requests.get(full_url)
+    response.raise_for_status()
+    data = response.json()
+
+    if not data:
+        print("Нет данных от EPIC.")
+        return None
+
+    latest_image = data[0]
+    image_date = latest_image['date'].split()[0]
+    image_name = latest_image['image']
+
+    image_url = f"https://epic.gsfc.nasa.gov/archive/natural/{image_date.replace('-', '/')}/png/{image_name}.png"
+
+    return image_url
+
+
 load_dotenv()
 api_key = os.environ.get('NASA_API_KEY')
 download_nasa_apod_images(api_key, count=50)
+image_url = get_epic_image_url(api_key)
+if image_url:
+    print(f"Ссылка на изображение: {image_url}")
+else:
+    print("Изображение не найдено.")
+
 
 test_url = "https://example.com/txt/hello%20world.txt?v=9#python"
 print(get_file_extension_from_url(test_url))
