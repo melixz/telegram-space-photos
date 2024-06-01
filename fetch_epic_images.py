@@ -2,6 +2,10 @@ import os
 import requests
 import argparse
 from common import download_image
+from dotenv import load_dotenv
+
+
+load_dotenv()
 
 
 def get_epic_image_urls(api_key, count=10):
@@ -40,11 +44,14 @@ def download_epic_images(api_key, count=10):
 
 def main():
     parser = argparse.ArgumentParser(description='Загрузить фотографии NASA EPIC')
-    parser.add_argument('--api_key', type=str, required=True, help='API ключ для NASA')
     parser.add_argument('--count', type=int, default=10, help='Количество изображений для загрузки')
     args = parser.parse_args()
 
-    download_epic_images(args.api_key, args.count)
+    api_key = os.getenv('NASA_API_TOKEN')
+    if not api_key:
+        raise ValueError("NASA_API_TOKEN не найден")
+
+    download_epic_images(api_key, args.count)
 
 
 if __name__ == '__main__':

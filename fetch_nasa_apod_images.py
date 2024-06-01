@@ -2,6 +2,10 @@ import os
 import requests
 import argparse
 from common import download_image, get_file_extension_from_url
+from dotenv import load_dotenv
+
+
+load_dotenv()
 
 
 def download_nasa_apod_images(api_key, count=50):
@@ -26,11 +30,14 @@ def download_nasa_apod_images(api_key, count=50):
 
 def main():
     parser = argparse.ArgumentParser(description='Загрузить фотографии NASA APOD')
-    parser.add_argument('--api_key', type=str, required=True, help='API ключ для NASA')
     parser.add_argument('--count', type=int, default=50, help='Количество изображений для загрузки')
     args = parser.parse_args()
 
-    download_nasa_apod_images(args.api_key, args.count)
+    api_key = os.getenv('NASA_API_TOKEN')
+    if not api_key:
+        raise ValueError("NASA_API_TOKEN не найден")
+
+    download_nasa_apod_images(api_key, args.count)
 
 
 if __name__ == '__main__':
