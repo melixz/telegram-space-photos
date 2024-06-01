@@ -2,8 +2,14 @@ import asyncio
 import os
 from dotenv import load_dotenv
 import telegram
+from fetch_nasa_apod_images import download_nasa_apod_images
 
 load_dotenv()
+
+
+async def send_image(bot, chat_id, image_path):
+    with open(image_path, 'rb') as f:
+        await bot.send_photo(chat_id=chat_id, photo=f)
 
 
 async def main():
@@ -15,7 +21,14 @@ async def main():
         print(await bot.get_me())
         updates = (await bot.get_updates())[0]
         print(updates)
-        await bot.send_message(text='Hi John!', chat_id=os.getenv('TELEGRAM_CHANNEL_ID'))
+
+        api_key = os.getenv('NASA_API_TOKEN')
+        if not api_key:
+            raise ValueError("NASA_API_TOKEN environment variable not set")
+        images_path = download_nasa_apod_images(api_key)
+
+        for image_path in images_path:
+            await send_image(bot, os.getenv('TELEGRAM_CHANNEL_ID'), image_path)
 
 if __name__ == '__main__':
     asyncio.run(main())

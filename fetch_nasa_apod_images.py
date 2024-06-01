@@ -1,14 +1,13 @@
+import argparse
 import os
 import requests
-import argparse
 from common import download_image, get_file_extension_from_url
 from dotenv import load_dotenv
-
 
 load_dotenv()
 
 
-def download_nasa_apod_images(api_key, count=50):
+def download_nasa_apod_images(api_key, count=1):
     apod_url = "https://api.nasa.gov/planetary/apod"
     params = {'api_key': api_key, 'count': count}
     response = requests.get(apod_url, params=params)
@@ -16,6 +15,7 @@ def download_nasa_apod_images(api_key, count=50):
     apod_data_list = response.json()
 
     os.makedirs('images', exist_ok=True)
+    image_paths = []
 
     for index, apod_data in enumerate(apod_data_list):
         image_url = apod_data.get('url')
@@ -26,6 +26,9 @@ def download_nasa_apod_images(api_key, count=50):
         file_extension = get_file_extension_from_url(image_url)
         save_path = os.path.join('images', f'nasa_apod_{index}{file_extension}')
         download_image(image_url, save_path)
+        image_paths.append(save_path)
+
+    return image_paths
 
 
 def main():
@@ -37,7 +40,9 @@ def main():
     if not api_key:
         raise ValueError("NASA_API_TOKEN не найден")
 
-    download_nasa_apod_images(api_key, args.count)
+    image_paths = download_nasa_apod_images(api_key, args.count)
+    for image_path in image_paths:
+        print(f"Image downloaded: {image_path}")
 
 
 if __name__ == '__main__':
