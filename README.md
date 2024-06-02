@@ -27,7 +27,19 @@
     ```sh
     python fetch_nasa_apod_images.py --count 50
     ```
+    
+2. Загрузите изображения с SpaceX:
+    ```sh
+    python fetch_spacex_images.py --launch_id <идентификатор_запуска>
+    ```
+   Примечание: Идентификатор запуска можно найти на [официальном сайте SpaceX](https://www.spacex.com/launches/).
 
+
+3. Загрузите изображения с NASA EPIC:
+    ```sh
+    python fetch_epic_images.py --date <дата_в_формате_YYYY-MM-DD>
+    ```
+    
 2. Запустите скрипт для публикации изображений в Telegram-канал:
     ```sh
     python image_post_to_telegram.py images --delay 14400
