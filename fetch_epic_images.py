@@ -38,7 +38,7 @@ def download_epic_images(api_key, count=10):
     os.makedirs('epic_images', exist_ok=True)
 
     for index, url in enumerate(image_urls):
-        save_path = os.path.join('epic_images', f'epic_image_{index}.png')
+        save_path = os.path.join('images', f'epic_image_{index}.png')
         download_image(url, save_path)
 
 

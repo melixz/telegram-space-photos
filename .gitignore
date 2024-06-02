@@ -137,3 +137,5 @@ cython_debug/
 # Файлы операционной системы
 .DS_Store
 Thumbs.db
+
+images
