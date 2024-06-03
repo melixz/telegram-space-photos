@@ -17,9 +17,9 @@ def get_epic_image_urls(api_key, count=10):
         return []
 
     image_urls = []
-    for item in epic_data[:count]:
-        image_date = item['date'].split()[0]
-        image_name = item['image']
+    for epic_item in epic_data[:count]:
+        image_date = epic_item['date'].split()[0]
+        image_name = epic_item['image']
         image_url = f"https://epic.gsfc.nasa.gov/archive/natural/{image_date.replace('-', '/')}/png/{image_name}.png"
         image_urls.append(image_url)
 
