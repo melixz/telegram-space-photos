@@ -7,8 +7,8 @@ from common import download_image
 def spacex_api_by_id(api_url, flight_id):
     response = requests.get(f"{api_url}/{flight_id}")
     response.raise_for_status()
-    launch_data = response.json()
-    image_urls = launch_data['links']['flickr']['original'] if launch_data['links']['flickr']['original'] else []
+    rocket_launch_data = response.json()
+    image_urls = rocket_launch_data['links']['flickr']['original'] if rocket_launch_data['links']['flickr']['original'] else []
     return image_urls
 
 

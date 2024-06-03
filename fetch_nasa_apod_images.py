@@ -10,13 +10,13 @@ def download_nasa_apod_images(api_key, count=1):
     params = {'api_key': api_key, 'count': count}
     response = requests.get(apod_url, params=params)
     response.raise_for_status()
-    apod_data_list = response.json()
+    apod_data = response.json()
 
     os.makedirs('images', exist_ok=True)
     image_paths = []
 
-    for index, apod_data in enumerate(apod_data_list):
-        image_url = apod_data.get('url')
+    for index, apod_entry in enumerate(apod_data):
+        image_url = apod_entry.get('url')
         if not image_url:
             print(f"URL изображения не найден для записи {index}.")
             continue

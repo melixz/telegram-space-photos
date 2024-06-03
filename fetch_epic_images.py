@@ -10,14 +10,14 @@ def get_epic_image_urls(api_key, count=10):
     params = {'api_key': api_key}
     response = requests.get(base_url, params=params)
     response.raise_for_status()
-    data = response.json()
+    epic_data = response.json()
 
-    if not data:
+    if not epic_data:
         print("Нет данных от EPIC.")
         return []
 
     image_urls = []
-    for item in data[:count]:
+    for item in epic_data[:count]:
         image_date = item['date'].split()[0]
         image_name = item['image']
         image_url = f"https://epic.gsfc.nasa.gov/archive/natural/{image_date.replace('-', '/')}/png/{image_name}.png"
