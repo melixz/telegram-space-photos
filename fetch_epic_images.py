@@ -5,9 +5,6 @@ from common import download_image
 from dotenv import load_dotenv
 
 
-load_dotenv()
-
-
 def get_epic_image_urls(api_key, count=10):
     base_url = "https://api.nasa.gov/EPIC/api/natural"
     params = {'api_key': api_key}
@@ -29,8 +26,7 @@ def get_epic_image_urls(api_key, count=10):
     return image_urls
 
 
-def download_epic_images(api_key, count=10):
-    image_urls = get_epic_image_urls(api_key, count)
+def download_epic_images(image_urls):
     if not image_urls:
         print("Фотографии не найдены.")
         return
@@ -38,7 +34,7 @@ def download_epic_images(api_key, count=10):
     os.makedirs('epic_images', exist_ok=True)
 
     for index, url in enumerate(image_urls):
-        save_path = os.path.join('images', f'epic_image_{index}.png')
+        save_path = os.path.join('epic_images', f'epic_image_{index}.png')
         download_image(url, save_path)
 
 
@@ -51,8 +47,10 @@ def main():
     if not api_key:
         raise ValueError("NASA_API_TOKEN не найден")
 
-    download_epic_images(api_key, args.count)
+    image_urls = get_epic_image_urls(api_key, args.count)
+    download_epic_images(image_urls)
 
 
 if __name__ == '__main__':
+    load_dotenv()
     main()

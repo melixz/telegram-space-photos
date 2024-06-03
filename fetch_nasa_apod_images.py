@@ -4,8 +4,6 @@ import requests
 from common import download_image, get_file_extension_from_url
 from dotenv import load_dotenv
 
-load_dotenv()
-
 
 def download_nasa_apod_images(api_key, count=1):
     apod_url = "https://api.nasa.gov/planetary/apod"
@@ -46,4 +44,5 @@ def main():
 
 
 if __name__ == '__main__':
+    load_dotenv()
     main()
