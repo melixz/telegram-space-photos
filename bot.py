@@ -4,8 +4,6 @@ from dotenv import load_dotenv
 import telegram
 from fetch_nasa_apod_images import download_nasa_apod_images
 
-load_dotenv()
-
 
 async def send_image(bot, chat_id, image_path):
     with open(image_path, 'rb') as f:
@@ -19,8 +17,12 @@ async def main():
     bot = telegram.Bot(token)
     async with bot:
         print(await bot.get_me())
-        updates = (await bot.get_updates())[0]
-        print(updates)
+
+        # Проверяем, есть ли обновления
+        updates = await bot.get_updates()
+        if updates:
+            updates = updates[0]
+            print(updates)
 
         api_key = os.getenv('NASA_API_TOKEN')
         if not api_key:
@@ -31,4 +33,5 @@ async def main():
             await send_image(bot, os.getenv('TELEGRAM_CHANNEL_ID'), image_path)
 
 if __name__ == '__main__':
+    load_dotenv()
     asyncio.run(main())

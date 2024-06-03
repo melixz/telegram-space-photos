@@ -1,2 +1,2 @@
-requests~=2.32.2
+ÿþrequests~=2.32.2
 python-dotenv~=1.0.1
