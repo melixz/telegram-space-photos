@@ -16,9 +16,6 @@ async def main():
         raise ValueError("TELEGRAM_BOT_TOKEN environment variable not set")
     bot = telegram.Bot(token)
     async with bot:
-        print(await bot.get_me())
-
-        # Проверяем, есть ли обновления
         updates = await bot.get_updates()
         if updates:
             updates = updates[0]

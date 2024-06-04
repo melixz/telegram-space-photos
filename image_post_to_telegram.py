@@ -31,7 +31,6 @@ async def main(directory, delay):
     bot = telegram.Bot(token)
 
     async with bot:
-        print(await bot.get_me())
 
         while True:
             images = get_image_files(directory)
