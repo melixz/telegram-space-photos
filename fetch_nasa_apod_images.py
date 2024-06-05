@@ -30,6 +30,7 @@ def download_nasa_apod_images(api_key, count=1):
 
 
 def main():
+    load_dotenv()
     parser = argparse.ArgumentParser(description='Загрузить фотографии NASA APOD')
     parser.add_argument('--count', type=int, default=50, help='Количество изображений для загрузки')
     args = parser.parse_args()
@@ -44,5 +45,4 @@ def main():
 
 
 if __name__ == '__main__':
-    load_dotenv()
     main()

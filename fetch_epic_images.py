@@ -39,6 +39,7 @@ def download_epic_images(image_urls):
 
 
 def main():
+    load_dotenv()
     parser = argparse.ArgumentParser(description='Загрузить фотографии NASA EPIC')
     parser.add_argument('--count', type=int, default=10, help='Количество изображений для загрузки')
     args = parser.parse_args()
@@ -52,5 +53,4 @@ def main():
 
 
 if __name__ == '__main__':
-    load_dotenv()
     main()
