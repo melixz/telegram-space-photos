@@ -15,8 +15,8 @@ def fetch_spacex_image_urls_by_flight_id(api_url, flight_id):
 def fetch_latest_spacex_image_urls(api_url):
     response = requests.get(api_url)
     response.raise_for_status()
-    launch_data = response.json()
-    image_urls = launch_data['links']['flickr']['original'] if launch_data['links']['flickr']['original'] else []
+    spacex_launch_data = response.json()
+    image_urls = spacex_launch_data['links']['flickr']['original'] if spacex_launch_data['links']['flickr']['original'] else []
     return image_urls
 
 
