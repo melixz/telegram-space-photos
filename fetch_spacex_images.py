@@ -4,19 +4,12 @@ import argparse
 from common import download_image
 
 
-def fetch_spacex_image_urls_by_flight_id(api_url, flight_id):
-    response = requests.get(f"{api_url}/{flight_id}")
+def fetch_spacex_image_urls(api_url, flight_id=None):
+    url = f"{api_url}/{flight_id}" if flight_id else api_url
+    response = requests.get(url)
     response.raise_for_status()
     launch_data = response.json()
     image_urls = launch_data['links']['flickr']['original']
-    return image_urls
-
-
-def fetch_latest_spacex_image_urls(api_url):
-    response = requests.get(api_url)
-    response.raise_for_status()
-    spacex_launch_data = response.json()
-    image_urls = spacex_launch_data['links']['flickr']['original']
     return image_urls
 
 
@@ -38,10 +31,10 @@ def main():
     args = parser.parse_args()
 
     if args.flight_id:
-        image_urls = fetch_spacex_image_urls_by_flight_id('https://api.spacexdata.com/v5/launches', args.flight_id)
+        image_urls = fetch_spacex_image_urls('https://api.spacexdata.com/v5/launches', args.flight_id)
         save_spacex_photos_to_folder(image_urls, folder_name=f'images/{args.flight_id}')
     else:
-        image_urls = fetch_latest_spacex_image_urls('https://api.spacexdata.com/v5/launches/latest')
+        image_urls = fetch_spacex_image_urls('https://api.spacexdata.com/v5/launches/latest')
         save_spacex_photos_to_folder(image_urls, folder_name='images/latest')
 
 

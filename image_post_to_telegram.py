@@ -8,8 +8,7 @@ import asyncio
 
 
 def get_image_files(directory):
-    return [os.path.join(directory, file) for file in os.listdir(directory) if
-            os.path.isfile(os.path.join(directory, file))]
+    return [os.path.join(directory, file) for file in os.listdir(directory) if os.path.isfile(os.path.join(directory, file))]
 
 
 async def send_image(bot, chat_id, image_path):
@@ -17,7 +16,7 @@ async def send_image(bot, chat_id, image_path):
         await bot.send_photo(chat_id=chat_id, photo=f)
 
 
-async def main(directory, delay):
+async def post_images_to_telegram(directory, delay):
     load_dotenv()
     token = os.getenv("TELEGRAM_BOT_TOKEN")
     chat_id = os.getenv("TELEGRAM_CHANNEL_ID")
@@ -31,22 +30,19 @@ async def main(directory, delay):
     bot = telegram.Bot(token)
 
     async with bot:
-
         while True:
             images = get_image_files(directory)
             random.shuffle(images)
 
             for image_path in images:
                 await send_image(bot, chat_id, image_path)
-                time.sleep(delay)
-
+                await asyncio.sleep(delay)
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(description='Публиковать фотографии в Telegram-канал с заданной периодичностью')
     parser.add_argument('directory', type=str, help='Директория с фотографиями')
-    parser.add_argument('--delay', type=int, default=14400,
-                        help='Задержка между публикациями в секундах (по умолчанию 4 часа)')
+    parser.add_argument('--delay', type=int, default=14400, help='Задержка между публикациями в секундах (по умолчанию 4 часа)')
 
     args = parser.parse_args()
 
-    asyncio.run(main(args.directory, args.delay))
+    asyncio.run(post_images_to_telegram(args.directory, args.delay))
