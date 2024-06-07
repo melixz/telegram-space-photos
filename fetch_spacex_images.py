@@ -27,8 +27,10 @@ def save_spacex_photos_to_folder(image_urls, folder_name='images'):
 
 def main():
     parser = argparse.ArgumentParser(description='Загрузить фотографии SpaceX по ID запуска или последнего запуска')
-    parser.add_argument('--flight_id', type=str, help='ID запуска SpaceX')
+    parser.add_argument('--flight_id', type=str, default='latest', help='ID запуска SpaceX')
     args = parser.parse_args()
+
+    flight_id = args.flight_id or 'latest'
 
     if args.flight_id:
         image_urls = fetch_spacex_image_urls('https://api.spacexdata.com/v5/launches', args.flight_id)
