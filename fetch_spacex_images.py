@@ -30,14 +30,9 @@ def main():
     parser.add_argument('--flight_id', type=str, default='latest', help='ID запуска SpaceX')
     args = parser.parse_args()
 
-    flight_id = args.flight_id or 'latest'
-
-    if args.flight_id:
-        image_urls = fetch_spacex_image_urls('https://api.spacexdata.com/v5/launches', args.flight_id)
-        save_spacex_photos_to_folder(image_urls, folder_name=f'images/{args.flight_id}')
-    else:
-        image_urls = fetch_spacex_image_urls('https://api.spacexdata.com/v5/launches/latest')
-        save_spacex_photos_to_folder(image_urls, folder_name='images/latest')
+    api_url = 'https://api.spacexdata.com/v5/launches'
+    image_urls = fetch_spacex_image_urls(api_url, args.flight_id)
+    save_spacex_photos_to_folder(image_urls, folder_name=f'images/{args.flight_id}')
 
 
 if __name__ == '__main__':
