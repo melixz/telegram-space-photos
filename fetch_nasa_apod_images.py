@@ -7,22 +7,22 @@ from dotenv import load_dotenv
 
 def download_nasa_apod_images(api_key, count=1):
     apod_url = "https://api.nasa.gov/planetary/apod"
-    params = {'api_key': api_key, 'count': count}
+    params = {"api_key": api_key, "count": count}
     response = requests.get(apod_url, params=params)
     response.raise_for_status()
     nasa_apod_images = response.json()
 
-    os.makedirs('images', exist_ok=True)
+    os.makedirs("images", exist_ok=True)
     image_paths = []
 
     for index, apod_entry in enumerate(nasa_apod_images):
-        image_url = apod_entry.get('url')
+        image_url = apod_entry.get("url")
         if not image_url:
             print(f"URL изображения не найден для записи {index}.")
             continue
 
         file_extension = get_file_extension_from_url(image_url)
-        save_path = os.path.join('images', f'nasa_apod_{index}{file_extension}')
+        save_path = os.path.join("images", f"nasa_apod_{index}{file_extension}")
         download_image(image_url, save_path)
         image_paths.append(save_path)
 
@@ -31,11 +31,13 @@ def download_nasa_apod_images(api_key, count=1):
 
 def main():
     load_dotenv()
-    parser = argparse.ArgumentParser(description='Загрузить фотографии NASA APOD')
-    parser.add_argument('--count', type=int, default=50, help='Количество изображений для загрузки')
+    parser = argparse.ArgumentParser(description="Загрузить фотографии NASA APOD")
+    parser.add_argument(
+        "--count", type=int, default=50, help="Количество изображений для загрузки"
+    )
     args = parser.parse_args()
 
-    api_key = os.getenv('NASA_API_TOKEN')
+    api_key = os.getenv("NASA_API_TOKEN")
     if not api_key:
         raise ValueError("NASA_API_TOKEN не найден")
 
@@ -44,5 +46,5 @@ def main():
         print(f"Image downloaded: {image_path}")
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     main()

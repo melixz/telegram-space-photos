@@ -7,7 +7,7 @@ def download_image(url, save_path):
     os.makedirs(os.path.dirname(save_path), exist_ok=True)
     response = requests.get(url)
     response.raise_for_status()
-    with open(save_path, 'wb') as file:
+    with open(save_path, "wb") as file:
         file.write(response.content)
     print(f"Изображение сохранено как {save_path}")
 
